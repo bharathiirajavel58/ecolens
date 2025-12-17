@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoLens - AI Carbon Footprint Scanner</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <i class="fas fa-leaf"></i>
+                    <span>EcoLens</span>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="#home" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="#scan" class="nav-link">Scan</a></li>
+                    <li class="nav-item"><a href="#dashboard" class="nav-link">Dashboard</a></li>
+                    <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Scan. Learn. Reduce.</h1>
+            <p>Use AI to estimate the carbon footprint of everyday objects and discover eco-friendly alternatives.</p>
+            <button class="cta-button" id="start-scanning">Start Scanning <i class="fas fa-camera"></i></button>
+        </div>
+        <div class="hero-image">
+            <div class="floating-card">
+                <div class="card-icon">
+                    <i class="fas fa-recycle"></i>
+                </div>
+                <h3>Plastic Bottle</h3>
+                <p>Carbon Footprint: 82g CO₂</p>
+                <div class="footprint-bar">
+                    <div class="footprint-fill medium"></div>
+                </div>
+            </div>
+            <div class="floating-card">
+                <div class="card-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Smartphone</h3>
+                <p>Carbon Footprint: 55kg CO₂</p>
+                <div class="footprint-bar">
+                    <div class="footprint-fill high"></div>
+                </div>
+            </div>
+            <div class="floating-card">
+                <div class="card-icon">
+                    <i class="fas fa-tshirt"></i>
+                </div>
+                <h3>Cotton T-Shirt</h3>
+                <p>Carbon Footprint: 2.1kg CO₂</p>
+                <div class="footprint-bar">
+                    <div class="footprint-fill low"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scanner Section -->
+    <section id="scan" class="scanner-section">
+        <div class="container">
+            <h2 class="section-title">Scan an Object</h2>
+            <p class="section-subtitle">Upload an image or use your camera to scan an everyday object</p>
+            
+            <div class="scanner-container">
+                <div class="scanner-options">
+                    <div class="option-card active" id="upload-option">
+                        <i class="fas fa-upload"></i>
+                        <h3>Upload Image</h3>
+                        <p>Select an image from your device</p>
+                    </div>
+                    <div class="option-card" id="camera-option">
+                        <i class="fas fa-camera"></i>
+                        <h3>Use Camera</h3>
+                        <p>Take a photo with your camera</p>
+                    </div>
+                </div>
+                
+                <div class="scanner-interface">
+                    <div class="upload-area" id="upload-area">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h3>Drag & Drop or Click to Upload</h3>
+                        <p>Supported formats: JPG, PNG, WebP</p>
+                        <input type="file" id="file-input" accept="image/*" hidden>
+                        <button class="upload-btn" id="upload-btn">Choose File</button>
+                    </div>
+                    
+                    <div class="camera-area hidden" id="camera-area">
+                        <div class="camera-preview">
+                            <video id="camera-feed" autoplay playsinline></video>
+                            <canvas id="camera-canvas" class="hidden"></canvas>
+                        </div>
+                        <div class="camera-controls">
+                            <button class="camera-btn" id="start-camera">
+                                <i class="fas fa-camera"></i> Start Camera
+                            </button>
+                            <button class="camera-btn capture-btn hidden" id="capture-btn">
+                                <i class="fas fa-camera-retro"></i> Capture
+                            </button>
+                            <button class="camera-btn secondary-btn hidden" id="retake-btn">
+                                <i class="fas fa-redo"></i> Retake
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-area hidden" id="analysis-area">
+                        <div class="analysis-header">
+                            <h3>Analyzing Image...</h3>
+                            <div class="loading-spinner"></div>
+                        </div>
+                        <div class="analysis-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill"></div>
+                            </div>
+                            <p class="progress-text" id="progress-text">Identifying object...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section hidden" id="results-section">
+        <div class="container">
+            <h2 class="section-title">Analysis Results</h2>
+            
+            <div class="results-container">
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="object-image">
+                            <img id="result-image" src="" alt="Scanned object">
+                        </div>
+                        <div class="object-info">
+                            <h3 id="object-name">Object Name</h3>
+                            <div class="carbon-footprint">
+                                <h4>Carbon Footprint</h4>
+                                <p id="carbon-value">0 kg CO₂</p>
+                                <div class="footprint-bar large">
+                                    <div class="footprint-fill" id="footprint-visual"></div>
+                                </div>
+                                <p class="footprint-label" id="footprint-label">Low Impact</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-details">
+                        <div class="detail-card">
+                            <h4><i class="fas fa-industry"></i> Manufacturing Impact</h4>
+                            <p id="manufacturing-impact">Details about manufacturing impact</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4><i class="fas fa-truck"></i> Transportation Impact</h4>
+                            <p id="transportation-impact">Details about transportation impact</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4><i class="fas fa-battery-half"></i> Usage Impact</h4>
+                            <p id="usage-impact">Details about usage impact</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4><i class="fas fa-trash"></i> Disposal Impact</h4>
+                            <p id="disposal-impact">Details about disposal impact</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alternatives-section">
+                    <h3>Eco-Friendly Alternatives</h3>
+                    <div class="alternatives-list" id="alternatives-list">
+                        <!-- Alternatives will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="voice-assistant-section">
+                    <h3>Voice Assistant</h3>
+                    <div class="voice-controls">
+                        <button class="voice-btn" id="listen-btn">
+                            <i class="fas fa-volume-up"></i> Listen to Explanation
+                        </button>
+                        <button class="voice-btn secondary-btn" id="stop-btn">
+                            <i class="fas fa-stop"></i> Stop
+                        </button>
+                    </div>
+                    <div class="voice-status">
+                        <p id="voice-status">Ready to explain</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn primary" id="scan-again">
+                    <i class="fas fa-redo"></i> Scan Another Item
+                </button>
+                <button class="action-btn secondary" id="save-result">
+                    <i class="fas fa-save"></i> Save to Dashboard
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="dashboard-section">
+        <div class="container">
+            <h2 class="section-title">Your Carbon Footprint Dashboard</h2>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-tree"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-scans">0</h3>
+                        <p>Items Scanned</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-carbon">0 kg</h3>
+                        <p>Carbon Footprint</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-recycle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="savings-potential">0 kg</h3>
+                        <p>Savings Potential</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-content">
+                <div class="history-section">
+                    <h3>Scan History</h3>
+                    <div class="history-list" id="history-list">
+                        <!-- History items will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="insights-section">
+                    <h3>Environmental Insights</h3>
+                    <div class="insights-container">
+                        <div class="insight-card">
+                            <h4>Your Top Impact Categories</h4>
+                            <div class="impact-categories" id="impact-categories">
+                                <!-- Categories will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <div class="insight-card">
+                            <h4>Weekly Carbon Reduction</h4>
+                            <div class="reduction-chart">
+                                <canvas id="reduction-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2 class="section-title">About EcoLens</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>EcoLens is a lightweight, AI-powered web application that helps users scan everyday objects to estimate their carbon footprint. Our mission is to raise sustainability awareness through interactive technology.</p>
+                    <p>Using advanced computer vision and voice interaction, EcoLens makes understanding environmental impact accessible to everyone.</p>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <i class="fas fa-camera"></i>
+                            <h4>Object Recognition</h4>
+                            <p>AI identifies objects and estimates carbon footprint</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-microphone-alt"></i>
+                            <h4>Voice Assistant</h4>
+                            <p>Learn about environmental impact through voice explanations</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-chart-line"></i>
+                            <h4>Dashboard Tracking</h4>
+                            <p>Monitor your carbon footprint over time</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-lightbulb"></i>
+                            <h4>Eco Alternatives</h4>
+                            <p>Discover sustainable alternatives to everyday items</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-leaf"></i>
+                    <span>EcoLens</span>
+                </div>
+                <p>Making sustainability awareness accessible through AI technology.</p>
+                <div class="footer-links">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 EcoLens. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- TensorFlow & MobileNet -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js"></script>
+
+    <!-- App script -->
+    <script src="app.js"></script>
+</body>
+</html>
